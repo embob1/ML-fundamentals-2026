@@ -1,67 +1,25 @@
 # Machine Learning Foundations – Assignment 1  
-## Data Preparation and Pipeline Design  
-UCI Bank Marketing Dataset (bank-additional.csv)
+## Data Preparation Pipeline (UCI Bank Marketing)
 
 ---
 
-## Objective
+## Overview
 
-The goal of this assignment is to design a clean and leakage-free data preparation pipeline to predict whether a client subscribes to a term deposit.
+This project implements a leakage-free data preparation pipeline to predict whether a client subscribes to a term deposit using the **bank-additional.csv** dataset (4,119 observations, 21 features).
 
-The emphasis is not on maximizing performance, but on:
-- Correct task ordering
-- Avoiding data leakage
-- Justifying preprocessing decisions
-- Demonstrating proper ML pipeline discipline
+The focus is on correct task ordering, preprocessing justification, and avoiding data leakage — not maximizing model performance.
 
 ---
 
-## Dataset
+## Pipeline Summary
 
-- Dataset: **bank-additional.csv**
-- Observations: 4,119
-- Features: 21
-- Target variable: `y` (yes / no)
-
-The dataset contains demographic, financial, campaign-related, and macroeconomic variables.
-
----
-
-## Pipeline Steps
-
-### 1. Target Identification
-- `y` selected as prediction target.
-- Justified based on marketing campaign objective.
-
-### 2. Exploratory Data Analysis
-- Identified categorical and numerical variables.
-- Checked class imbalance (~89% no / ~11% yes).
-- Detected implicit missing values (`"unknown"`).
-- No explicit NaN values found.
-
-### 3. Stratified Data Splitting
-- 60% Training
-- 20% Validation
-- 20% Test
-- Stratified split performed before preprocessing to prevent leakage.
-
-### 4. Data Leakage Prevention
-- Removed `duration` variable because it is not available at prediction time.
-
-### 5. Encoding
-- Applied One-Hot Encoding to categorical variables.
-- Encoder fitted only on the training set.
-
-### 6. Feature Scaling
-- Applied StandardScaler to numerical variables.
-- Scaler fitted only on the training set.
-
-### 7. Class Imbalance Handling
-- Used Logistic Regression with `class_weight="balanced"`.
-
-### 8. Logistic Regression (Sanity Check)
-- Model trained on processed training data.
-- Evaluated on validation set.
+- Identified `y` as target variable.
+- Performed exploratory data analysis and detected class imbalance (~89% no / ~11% yes).
+- Split data into 60% train, 20% validation, 20% test (stratified).
+- Removed `duration` to prevent data leakage.
+- Applied One-Hot Encoding (fitted on training set only).
+- Scaled numerical features using StandardScaler (training set only).
+- Trained Logistic Regression with `class_weight="balanced"` as a sanity check.
 
 ---
 
@@ -72,21 +30,20 @@ The dataset contains demographic, financial, campaign-related, and macroeconomic
 | Zero Rule | ~89% | 0% |
 | Logistic Regression | ~83.6% | 60% |
 
-Although the Zero Rule baseline achieves higher accuracy, it fails to detect subscribers.  
-The Logistic Regression model improves minority class detection significantly.
+Although accuracy decreases slightly, the model substantially improves detection of the minority class.
 
 ---
 
 ## Key Principle
 
-All transformations that learn parameters (encoding and scaling) were fitted only on the training set to prevent data leakage.
+All preprocessing steps that learn parameters were fitted exclusively on the training set to ensure unbiased evaluation.
 
 ---
 
 ## Reproducibility
 
-Run the notebook using:
+Run the notebook from top to bottom:
 
 Runtime → Restart runtime → Run all
 
-The dataset is downloaded programmatically, so no manual upload is required.
+The dataset is downloaded programmatically.
